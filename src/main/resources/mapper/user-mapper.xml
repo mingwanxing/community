@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--userMapper的全限定类名-->
+<mapper namespace="com.mingwangxin.community.dao.UserMapper">
+
+    <!--   如果多个 select 有相同的代码片段，可以提取 ，这样定义复用重复的代码-->
+    <sql id="selectFields">
+        id, username, password, salt, email, type, status, activation_code, header_url, create_time
+    </sql>
+
+    <sql id="insertFields">
+        username, password, salt, email, type, status, activation_code, header_url, create_time
+    </sql>
+
+    <!--  写各种各样的标签，与接口中的方法一一对应  -->
+    <!--    id 写 对应方法名，这样mybatis就知道这个 sql 为那个方法服务的-->
+    <!--    resultType 按理写全限定类名，但是之前在 application.properties 配置了 前面的包名-->
+    <select id="selectById" resultType="User">
+        select <include refid="selectFields"></include>
+        from user
+        <!--    #{id}  表示引用方法的参数  -->
+
+        where id = #{id}
+    </select>
+
+    <select id="selectByName" resultType="User">
+        select <include refid="selectFields"></include>
+        from user
+        <!--       #{id}  表示引用方法的参数 -->
+        where username = #{username}
+    </select>
+
+    <select id="selectByEmail" resultType="User">
+        select <include refid="selectFields"></include>
+        from user
+       <!--       #{id}  表示引用方法的参数 -->
+        where email = #{email}
+    </select>
+
+
+    <!--   如果方法的参数是复杂参数，如是一个 bean 需要声明，因为不是 Java 自带的东西-->
+    <!--   keyProperty 需要告诉主键 id 字段的属性， 因为 mysql 底层会自动生成 id， 这个 id 是 mybatis 从数据库获取到，回填进 User -->
+    <!--  有时候在开发中需要向表中插入自增ID，这个时候领域模型如果想要获取该ID的值，就需要在相应的mapper文件中添加useGeneratedKeys="true" keyProperty="id"。-->
+    <insert id="insertUser" parameterType="User" useGeneratedKeys="true" keyProperty="id">
+        insert into user (<include refid="insertFields"></include>)
+        values(#{username}, #{password}, #{salt}, #{email}, #{type}, #{status}, #{activationCode}, #{headerUrl}, #{createTime})
+    </insert>
+
+
+    <update id="updateStatus">
+        update user set status = #{status} where id = #{id}
+    </update>
+
+    <update id="updateHeader">
+        update user set header_url = #{headerUrl} where id = #{id}
+    </update>
+
+    <update id="updatePassword">
+        update user set password = #{password} where id = #{id}
+    </update>
+
+
+
+
+
+
+
+</mapper>

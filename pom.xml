@@ -58,6 +58,7 @@
 			<artifactId>spring-boot-starter-mail</artifactId>
 			<version>2.2.6.RELEASE</version>
 		</dependency>
+		<!-- 用于字符串判断的包 -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>

@@ -1,4 +1,4 @@
-<!doctype html>
+ <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="utf-8">
@@ -189,6 +189,7 @@
 	<script>
 		function refresh_kaptcha() {
 			// 为了防止游览器智能，一位url没有变化。不刷行新内容，做一个欺骗?p=随机数，
+			// CONTEXT_PATH 在 global.js 中定义
 			var path = CONTEXT_PATH + "/kaptcha?p=" + Math.random();
 			// 该改变 src 属性，#() 选择器，选中节点
 			$("#kaptcha").attr("src", path);

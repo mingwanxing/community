@@ -154,6 +154,7 @@ public class UserService implements CommunityConstant {
         loginTicket.setStatus(0);
         loginTicket.setExpired(new Date(System.currentTimeMillis() + expiredSeconds * 1000));
         loginTicketMapper.insertLoginTicket(loginTicket);
+        // ticket 返回给 客户端
         map.put("ticket", loginTicket.getTicket());
         return map;
 

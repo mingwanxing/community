@@ -116,9 +116,12 @@ public class LoginController implements CommunityConstant {
 
     // path 可以一样，但是 method 需要不一样
     @RequestMapping(path = "/login", method = RequestMethod.POST)
+    // code 传入的验证码
+    // 如果是 实体类，会被 spring 自动放入 model 中
     public String login(String username, String password, String code, boolean rememberme, Model model,
                         HttpSession session, HttpServletResponse response) {
         String kaptcha = (String) session.getAttribute("kaptcha");
+        // 检查验证码
         if (StringUtils.isBlank(kaptcha) || StringUtils.isBlank(code) || !kaptcha.equalsIgnoreCase(code)) {
             model.addAttribute("codeMsg", "验证码不正确");
             return "/site/login";

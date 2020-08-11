@@ -60,7 +60,9 @@ public class UserController {
             model.addAttribute("error", "您还没有选择图片！");
             return "/site/setting";
         }
+        // 为了避免上传文件被覆盖，设置一个随机的名字
         String filename = headerImage.getOriginalFilename();
+        // 后缀不能变
         String suffix = filename.substring(filename.lastIndexOf("."));
         if (StringUtils.isBlank(suffix)) {
             model.addAttribute("error", "文件格式不正确！");
@@ -89,13 +91,14 @@ public class UserController {
     }
 
 
-    @RequestMapping(path = "/header/[filename]", method = RequestMethod.GET)
-    public void getHeader(@PathVariable("fileName") String fileName, HttpServletResponse response) {
+    @RequestMapping(path = "/header/{filename}", method = RequestMethod.GET)
+    // 响应的是一个图片，需要通过流传输
+    public void getHeader(@PathVariable("filename") String fileName, HttpServletResponse response) {
         // 服务器存放的路径
         fileName = uploadPath + "/" + fileName;
         // 文件的后缀
         String suffix = fileName.substring(fileName.lastIndexOf("."));
-        // 响应图片
+        // 响应的类型
         response.setContentType("image/" + suffix);
         try (
                 OutputStream os = response.getOutputStream();

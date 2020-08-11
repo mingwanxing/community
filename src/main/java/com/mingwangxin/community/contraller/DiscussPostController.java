@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
 
+
 @Controller
 @RequestMapping("/discuss")
 public class DiscussPostController {

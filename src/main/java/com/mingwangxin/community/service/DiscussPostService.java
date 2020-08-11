@@ -32,12 +32,14 @@ public class DiscussPostService {
         return discussPostMapper.selectDiscussPostRows(userId);
     }
 
+    // 增加帖子的逻辑
     public int addDiscussPost(DiscussPost post) {
         if (post == null) {
             throw new IllegalArgumentException("参数不能为空!");
+
         }
 
-        // 转义HTML标记
+        // 转义HTML标记，把标签转义
         post.setTitle(HtmlUtils.htmlEscape(post.getTitle()));
         post.setContent(HtmlUtils.htmlEscape(post.getContent()));
         // 过滤敏感词

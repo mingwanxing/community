@@ -27,7 +27,7 @@ public interface DiscussPostMapper {
     // 增加帖子的方法
     int insertDiscussPost(DiscussPost discussPost);
 
-
+    // 通过 id 查询帖子详情
     DiscussPost selectDiscussPostById(int id);
 
 

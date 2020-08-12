@@ -49,8 +49,10 @@ public class DiscussPostController {
         return CommunityUtil.getJSONString(0, "发布成功!");
     }
 
+    //
     @RequestMapping(path = "/detail/{discussPostId}", method = RequestMethod.GET)
     public String getDiscussPost(@PathVariable("discussPostId") int discussPostId, Model model) {
+
         // 帖子
         DiscussPost post = discussPostService.findDiscussPostById(discussPostId);
         model.addAttribute("post", post);

@@ -19,7 +19,6 @@ public class DiscussPostService {
     @Autowired
     private SensitiveFilter sensitiveFilter;
 
-
     // 查询到的 discussPosts， 会有一个外键，显示时不会显示外键，而是会显示用户名称
     // 一种是写 sql 时候关联查询用户，同时查询到用户数据
     // 可以针对每一个查询到的 discussPost 单独查一次 user，再组合在一起

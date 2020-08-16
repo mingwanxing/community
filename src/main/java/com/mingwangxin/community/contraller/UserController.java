@@ -2,8 +2,10 @@ package com.mingwangxin.community.contraller;
 
 import com.mingwangxin.community.annotation.LoginRequired;
 import com.mingwangxin.community.entity.User;
+import com.mingwangxin.community.service.FollowService;
 import com.mingwangxin.community.service.LikeService;
 import com.mingwangxin.community.service.UserService;
+import com.mingwangxin.community.util.CommunityConstant;
 import com.mingwangxin.community.util.CommunityUtil;
 import com.mingwangxin.community.util.CookieUtil;
 import com.mingwangxin.community.util.HostHolder;
@@ -30,7 +32,7 @@ import java.io.OutputStream;
 
 @Controller
 @RequestMapping(path = "/user")
-public class UserController {
+public class UserController implements CommunityConstant {
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Value("${community.path.upload}")
@@ -50,6 +52,9 @@ public class UserController {
 
     @Autowired
     private LikeService likeService;
+
+    @Autowired
+    private FollowService followService;
 
     @LoginRequired
     @RequestMapping(path = "/setting", method = RequestMethod.GET)
@@ -168,6 +173,19 @@ public class UserController {
         // 点赞数量
         int likeCount = likeService.findUserLikeCount(userId);
         model.addAttribute("likeCount", likeCount);
+
+        // 关注数量
+        long followeeCount = followService.findFolloweeCount(userId, ENTITY_TYPE_USER);
+        model.addAttribute("followeeCount", followeeCount);
+        // 粉丝数量
+        long followerCount = followService.findFollowerCount(ENTITY_TYPE_USER, userId);
+        model.addAttribute("followerCount", followerCount);
+        // 当前登陆用户是否已关注
+        boolean hasFollowed = false;
+        if (hostHolder.getUser() != null) {
+            hasFollowed = followService.hasFollowed(hostHolder.getUser().getId(), ENTITY_TYPE_USER, userId);
+        }
+        model.addAttribute("hasFollowed", hasFollowed);
 
         return "/site/profile";
 

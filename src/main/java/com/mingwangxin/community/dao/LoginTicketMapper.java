@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Mapper
 @Repository
+@Deprecated
 public interface LoginTicketMapper {
     // 增删改方法返回的通常好似影响的行数
     // 主键不用，其自动生成

@@ -2,6 +2,7 @@ package com.mingwangxin.community.contraller;
 
 import com.mingwangxin.community.annotation.LoginRequired;
 import com.mingwangxin.community.entity.User;
+import com.mingwangxin.community.service.LikeService;
 import com.mingwangxin.community.service.UserService;
 import com.mingwangxin.community.util.CommunityUtil;
 import com.mingwangxin.community.util.CookieUtil;
@@ -46,6 +47,9 @@ public class UserController {
 
     @Autowired
     private HostHolder hostHolder;
+
+    @Autowired
+    private LikeService likeService;
 
     @LoginRequired
     @RequestMapping(path = "/setting", method = RequestMethod.GET)
@@ -151,5 +155,23 @@ public class UserController {
 
         return "redirect:/index";
     }
+
+    // 个人主页
+    @RequestMapping(path = "/profile/{userId}", method = RequestMethod.GET)
+    public String getProfilePage(@PathVariable("userId")int userId, Model model) {
+        User user = userService.findUserById(userId);
+        if (null == user) {
+            throw new RuntimeException("该用户不存在！");
+        }
+        // 用户
+        model.addAttribute("user", user);
+        // 点赞数量
+        int likeCount = likeService.findUserLikeCount(userId);
+        model.addAttribute("likeCount", likeCount);
+
+        return "/site/profile";
+
+    }
+
 
 }

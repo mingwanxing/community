@@ -5,7 +5,9 @@ import com.mingwangxin.community.entity.DiscussPost;
 import com.mingwangxin.community.entity.Page;
 import com.mingwangxin.community.entity.User;
 import com.mingwangxin.community.service.DiscussPostService;
+import com.mingwangxin.community.service.LikeService;
 import com.mingwangxin.community.service.UserService;
+import com.mingwangxin.community.util.CommunityConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,13 +22,16 @@ import java.util.Map;
 
 // controller 的访问路径是可以省略的，这一级就是空的
 @Controller
-public class HomeController {
+public class HomeController implements CommunityConstant {
 
     @Autowired
     private DiscussPostService discussPostService;
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private LikeService likeService;
 
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public String getIndexPage(Model model, Page page) {
@@ -44,6 +49,10 @@ public class HomeController {
                 map.put("post", post);
                 User user = userService.findUserById(post.getUserId());
                 map.put("user", user);
+
+                // 查询赞的数量
+                long likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_POST, post.getId());
+                map.put("likeCount", likeCount);
 
                 discussPosts.add(map);
             }

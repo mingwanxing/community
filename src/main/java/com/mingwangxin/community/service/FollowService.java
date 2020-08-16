@@ -75,5 +75,48 @@ public class FollowService implements CommunityConstant {
         return redisTemplate.opsForZSet().score(followeeKey, entityId) != null;
     }
 
+    // 查询某用户关注的人
+    public List<Map<String, Object>> findFollowees(int userId, int offset, int limit) {
+        String followeeKey = RedisKeyUtil.getFolloweeKey(userId, ENTITY_TYPE_USER);
+        Set<Integer> targetIds = redisTemplate.opsForZSet().reverseRange(followeeKey, offset, offset + limit - 1);
+
+        if (targetIds == null) {
+            return null;
+        }
+
+        List<Map<String, Object>> list = new ArrayList<>();
+        for (Integer targetId : targetIds) {
+            Map<String, Object> map = new HashMap<>();
+            User user = userService.findUserById(targetId);
+            map.put("user", user);
+            Double score = redisTemplate.opsForZSet().score(followeeKey, targetId);
+            map.put("followTime", new Date(score.longValue()));
+            list.add(map);
+        }
+
+        return list;
+    }
+
+    // 查询某用户的粉丝
+    public List<Map<String, Object>> findFollowers(int userId, int offset, int limit) {
+        String followerKey = RedisKeyUtil.getFollowerKey(ENTITY_TYPE_USER, userId);
+        Set<Integer> targetIds = redisTemplate.opsForZSet().reverseRange(followerKey, offset, offset + limit - 1);
+
+        if (targetIds == null) {
+            return null;
+        }
+
+        List<Map<String, Object>> list = new ArrayList<>();
+        for (Integer targetId : targetIds) {
+            Map<String, Object> map = new HashMap<>();
+            User user = userService.findUserById(targetId);
+            map.put("user", user);
+            Double score = redisTemplate.opsForZSet().score(followerKey, targetId);
+            map.put("followTime", new Date(score.longValue()));
+            list.add(map);
+        }
+
+        return list;
+    }
 
 }

@@ -1,7 +1,9 @@
 package com.mingwangxin.community.contraller;
 
+import com.mingwangxin.community.entity.Event;
 import com.mingwangxin.community.entity.Page;
 import com.mingwangxin.community.entity.User;
+import com.mingwangxin.community.event.EventProducer;
 import com.mingwangxin.community.service.FollowService;
 import com.mingwangxin.community.service.UserService;
 import com.mingwangxin.community.util.CommunityConstant;
@@ -30,6 +32,9 @@ public class FollowController implements CommunityConstant {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private EventProducer eventProducer;
+
     @RequestMapping(path = "/follow", method = RequestMethod.POST)
     @ResponseBody
     public String follow(int entityType, int entityId) {
@@ -37,6 +42,17 @@ public class FollowController implements CommunityConstant {
 
         //  如果没登陆，用拦截器做个检查
         followService.follow(user.getId(), entityType, entityId);
+
+        // 触发关注事件
+
+        // 不需要帖子id
+        Event event = new Event()
+                .setTopic(TOPIC_FOLLOW)
+                .setUserId(hostHolder.getUser().getId())
+                .setEntityType(entityType)
+                .setEntityId(entityId)
+                .setEntityUserId(entityId);
+        eventProducer.fireEvent(event);
 
         return CommunityUtil.getJSONString(0, "已关注!");
     }

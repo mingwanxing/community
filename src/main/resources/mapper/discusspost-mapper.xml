@@ -24,6 +24,7 @@
         limit #{offset}, #{limit}
     </select>
 
+
     <select id="selectDiscussPostRows" resultType="int">
         select count(id)
         from discuss_post
@@ -32,6 +33,7 @@
             and user_id = #{userId}
         </if>
     </select>
+
 
 
     <insert id="insertDiscussPost" parameterType="DiscussPost">
